@@ -2,6 +2,7 @@ var {Shop, Item} = require('../src/gilded_rose.js');
 describe("Gilded Rose", function() {
   var gildedRose;
   var item;
+  var item2;
 
   beforeEach(function(){
     gildedRose = new Shop();
