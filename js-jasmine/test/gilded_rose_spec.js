@@ -28,11 +28,19 @@ describe("Gilded Rose", function() {
     expect(gildedRose.items[1].sellIn).toEqual(-1);
   })
 
-  it('should not decrease the sellIn or quality for Sulfuras', function(){
-    item2 = new Item('Sulfuras, Hand of Ragnaros', 10, 10)
+  it('should do nothing to the quality of a normal item if already 0', function(){
+    item2 = new Item('Shoe', 0, 0)
     gildedRose.addItem(item2)
     gildedRose.updateQuality()
-    expect(gildedRose.items[1].quality).toEqual(10);
+    expect(gildedRose.items[1].quality).toEqual(0);
+    expect(gildedRose.items[1].sellIn).toEqual(-1);
+  })
+
+  it('should not decrease the sellIn or quality for Sulfuras', function(){
+    item2 = new Item('Sulfuras, Hand of Ragnaros', 10, 80)
+    gildedRose.addItem(item2)
+    gildedRose.updateQuality()
+    expect(gildedRose.items[1].quality).toEqual(80);
     expect(gildedRose.items[1].sellIn).toEqual(10);
   })
 
@@ -64,7 +72,7 @@ describe("Gilded Rose", function() {
     item2 = new Item('Aged Brie', 0, 48)
     gildedRose.addItem(item2)
     gildedRose.updateQuality()
-    expect(gildedRose.items[1].quality).toEqual(50);
+    expect(gildedRose.items[1].quality).toEqual(49);
     expect(gildedRose.items[1].sellIn).toEqual(-1);
   })
 
@@ -116,4 +124,30 @@ describe("Gilded Rose", function() {
     expect(gildedRose.items[1].quality).toEqual(0);
     expect(gildedRose.items[1].sellIn).toEqual(-2);
   })
+
+  it('should not reduce Conjured quality below 0', function(){
+    item2 = new Item('Conjured', 0, 0)
+    gildedRose.addItem(item2)
+    gildedRose.updateQuality()
+    gildedRose.updateQuality()
+    expect(gildedRose.items[1].quality).toEqual(0);
+    expect(gildedRose.items[1].sellIn).toEqual(-2);
+  })
+
+  it('should reduce Conjured quality by 2 before sellIn date', function(){
+    item2 = new Item('Conjured', 1, 10)
+    gildedRose.addItem(item2)
+    gildedRose.updateQuality()
+    expect(gildedRose.items[1].quality).toEqual(8);
+    expect(gildedRose.items[1].sellIn).toEqual(0);
+  })
+
+  it('should reduce Conjured quality by 4 after sellIn date', function(){
+    item2 = new Item('Conjured', 0, 10)
+    gildedRose.addItem(item2)
+    gildedRose.updateQuality()
+    expect(gildedRose.items[1].quality).toEqual(6);
+    expect(gildedRose.items[1].sellIn).toEqual(-1);
+  })
+
 });
